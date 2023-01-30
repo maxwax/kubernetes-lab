@@ -71,18 +71,18 @@ then
   sudo firewall-cmd --add-port=10250/tcp --permanent
   sudo firewall-cmd --add-port=10259/tcp --permanent
   sudo firewall-cmd --add-port=10257/tcp --permanent
-
-  sudo firewall-cmd --reload
-  sudo firewall-cmd --list-all
-
 else
   # WORKER NODE
   sudo firewall-cmd --add-port=10250/tcp --permanent
   sudo firewall-cmd --add-port=30000-32767/tcp --permanent
-
-  sudo firewall-cmd --reload
-  sudo firewall-cmd --list-all
 fi
+
+# Allow traffic to flow from Flannel created subnets within Pod network 10.244.0.0/16
+sudo firewall-cmd --zone=trusted --add-source=10.244.0.0/16 --permanent
+
+# Common to Master and Worker nodes, activate all changes above
+sudo firewall-cmd --reload
+sudo firewall-cmd --list-all
 
 next_step "Disable SELinux by entering Permissive mode"
 
