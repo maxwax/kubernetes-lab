@@ -2,7 +2,7 @@
 
 #
 # install-kubernetes.sh
-# 
+#
 # Script to install Kubernetes on Rocky Linux 9.x
 #
 
@@ -42,6 +42,12 @@ do
     STEP_THROUGH_MODE=true
     shift
     ;;
+
+    *)
+    if [[ ${1:0:1} != "-" && ${1:0:2} != "--" ]]
+    then
+      break
+    fi
 
   esac
 
@@ -90,7 +96,7 @@ sudo setenforce 0
 sudo sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 
 sestatus
- 
+
 next_step "Load modules overlay and br_netfilter"
 
 sudo modprobe overlay
@@ -133,8 +139,8 @@ next_step "Install containerd.io from Docker repository"
 
 sudo dnf -y install containerd.io
 
-echo 
-echo 
+echo
+echo
 echo "WAIT -- CHECK /ETC/CONTAINERD/CONFIG.TOML FOR ONE CHANGE REQUIRED"
 echo
 echo
@@ -220,7 +226,7 @@ then
   kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
 
   next_step "Use kubectl to get all pods in all namespaces"
- 
+
   kubectl get pods --all-namespaces
 
 elif [[ $NODE_TYPE == "worker" ]]
