@@ -17,7 +17,7 @@ function usage {
 # Periodically pause after executing a command so the user can observe the
 # output before either proceeding or stopping
 function next_step {
-  if [[ $STEP_THROUGH_MODE==true ]]
+  if [[ $STEP_THROUGH_MODE == true ]]
   then
     echo
     echo "Next Step: $1"
@@ -39,15 +39,19 @@ do
   case $1 in
 
     "-s" | "--step")
-    STEP_THROUGH_MODE=true
-    shift
+      STEP_THROUGH_MODE=true
+      shift
     ;;
 
     *)
-    if [[ ${1:0:1} != "-" && ${1:0:2} != "--" ]]
-    then
-      break
-    fi
+      if [[ ${1:0:1} != "-" && ${1:0:2} != "--" ]]
+      then
+        break
+      else
+        echo "Error: I don't understand that option"
+        exit 1
+      fi
+    ;;
 
   esac
 
@@ -208,7 +212,7 @@ then
   next_step "Create the control plane with kubeadm init"
 
   sudo kubeadm init --pod-network-cidr=10.244.0.0/16 \
-  --apiserver-advertise-address=192.168.9.134 \
+  --apiserver-advertise-address=192.168.9.141 \
   --cri-socket=unix:///run/containerd/containerd.sock
 
   next_step "Setup local $HOME/kube/config for kubectl"
@@ -236,7 +240,7 @@ then
   echo
   echo "Example:"
   echo
-  echo "kubeadm join 192.168.9.134:6443 --token notthe.actualtoken \
+  echo "kubeadm join 192.168.9.141:6443 --token notthe.actualtoken \
   	  --discovery-token-ca-cert-hash sha256:veryrandomlongstringofharshedtokeninformation"
   echo
   echo "You can generate a new cluster join tokent with:"
